@@ -59,7 +59,7 @@ class LinkedList:
                     if self.head is not None:
                         self.head.left = None
                     else:
-                        self.tail = None # Nếu danh sách chỉ có 1 phần tử
+                        self.tail = None 
                 
                 # Trường hợp 2: Node cần xóa là Tail
                 elif temp == self.tail:
@@ -72,11 +72,11 @@ class LinkedList:
                     temp.right.left = temp.left
                 
                 self._size -= 1
-                return True # Xóa thành công
+                return True
             
-            temp = temp.right # Tiếp tục dò nếu chưa thấy
+            temp = temp.right 
             
-        return False # Không tìm thấy key để xóa
+        return False
 
     def display(self):
         """In danh sách ra màn hình"""
@@ -88,4 +88,4 @@ class LinkedList:
         while temp is not None:
             print(temp.val, end=" <-> " if temp.right else "")
             temp = temp.right
-        print() # Xuống dòng
+        print()
