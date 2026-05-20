@@ -18,7 +18,7 @@ class UserService:
         return new_user
     
     def update_user(self, user_id, full_name = None, phone = None, email = None, sex = None, address = None, job = None, dob = None):
-        user_change : User = self.user_storage.search(user_id)
+        user_change = self.user_storage.search(user_id)
 
         if user_change is None:
             print("User not found")
@@ -47,7 +47,41 @@ class UserService:
 
         print("Update successfully")
         return True
+
+    def delete_user(self, user_id):
+        if not self.user_storage.search(user_id):
+            print("User not found")
+            return False
+        
+        self.user_storage.remove(user_id)
+        print(f"Remove user {user_id} successfully")
+        return True
     
+    def find_user_by_id(self, user_id):
+        user = self.user_storage.search(user_id)
+
+        if user is None:
+            print("USer not found")
+            return False
+
+        return user
+    
+    def display_all_users(self):
+        is_empty = True
+
+        for bucket in self.user_storage.table:
+            current = bucket
+            
+            while current:
+                user = current.value
+                user.display_info()
+                current = current.next
+
+                is_empty = False
+
+        if is_empty:
+            print("No users found")
+'''
 if __name__ == "__main__":
 
     service = UserService()
@@ -65,9 +99,14 @@ if __name__ == "__main__":
 
     service.update_user(
         "001",
-        full_name="Duc đẹp trai"
+        full_name="hihihi"
+
+
     )
 
     user = service.user_storage.search("001")
 
     print(user.full_name)
+
+    service.display_all_users()
+'''

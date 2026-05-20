@@ -1,4 +1,4 @@
-from Node import Node
+from .Node import Node
 class Hash_table:
     def __init__(self, capacity=10):
         self.capacity = capacity
