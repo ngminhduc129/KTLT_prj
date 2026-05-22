@@ -23,7 +23,7 @@ class Account:
     # In ra 
     def display_info(self):
         print("Số tài khoản: ", self.account_id)
-        print("Họ và tên: ", self.full_name)
+        print("Tên chủ tài khoản: ", self.full_name)
         print("Số dư tài khoản: ", self.balance)
         print("Trạng thái: ", self.status)
         print("Chi nhánh: ", self.create_at)

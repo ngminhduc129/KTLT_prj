@@ -94,7 +94,6 @@ Hệ thống được thiết kế theo mô hình nhiều tầng:
 | Thuộc tính | Kiểu dữ liệu | Mô tả |
 |---|---|---|
 | account_id | String | Mã tài khoản |
-| full_name | String | Chủ tài khoản |
 | balance | Float | Số dư |
 | pin | String | Mã PIN |
 | user_id | String | Mã khách hàng |
@@ -357,7 +356,6 @@ withdraw()
 transfer()
 find_account()
 display_all_accounts()
-calculate_interest()
 change_pin()
 unlock_account()
 lock_account()
@@ -389,6 +387,12 @@ generate_transaction_id()
 ---
 
 ## SavingService
+
+### Cấu trúc sử dụng
+
+```python
+LinkedList
+```
 
 ### Vai trò
 
