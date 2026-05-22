@@ -1,7 +1,7 @@
 from Structures.Hash_table import Hash_table
 from Models.account import Account
 from Services.user_service import UserService
-
+from Structures.Linked_list import LinkedList
 class AccountService:
     """
     Service layer for managing bank accounts.
@@ -179,6 +179,17 @@ class AccountService:
 
         if is_empty:
             print("No users found")
+
+    def get_accounts_by_user_id(self, user_id): # DNB design not sure correct so NMD dung le nha le nhe
+        accounts_of_user_id = LinkedList()
+        for bucket in self.account_storage.table:
+            current = bucket
+            while current is not None:
+                account = current.value
+                if account.user_id == user_id:
+                    accounts_of_user_id.append(account)
+                current = current.next
+        return accounts_of_user_id
 
 
     def change_pin(self, account_id: str, password: str, old_pin: str, new_pin: str) -> Account:

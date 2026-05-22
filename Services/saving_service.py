@@ -47,7 +47,7 @@ class SavingService:
         )
 
         # Add a saving deposit into HashTable
-        self.saving_storage.insert(new_saving)
+        self.saving_storage.insert(deposit_id, new_saving)
 
         return new_saving
     
@@ -58,7 +58,7 @@ class SavingService:
         
         months = (maturity.year - start.year) * 12 + (maturity.month - start.month) 
         if months < start.day:
-            months -= -1
+            months -= 1
 
         return months
 
@@ -93,7 +93,7 @@ class SavingService:
             while current is not None:
                 user = current.value
                 users_saving.append(user)
-                current.next   
+                current = current.next   
         return users_saving
                 
     def get_active_savings(self):
@@ -104,7 +104,7 @@ class SavingService:
                 active = current.value
                 if active.status == "Active":
                     active_savings.append(active)
-                current.next
+                current = current.next
         return active_savings
 
     def generate_saving_id(self):
@@ -114,3 +114,4 @@ class SavingService:
             deposit_id = "STK" + str(random.randint(000000, 999999)).zfill(6)
             if self.saving_storage.search(deposit_id) is None:
                 return deposit_id
+            

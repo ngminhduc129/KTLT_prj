@@ -20,6 +20,10 @@ class Account:
     def check_pin(self, pin):
         return self.pin == pin
     
+    # Kiểm tra mật khẩu khi đăng nhập vào tài khoản
+    def check_password(self, password):
+        return self.password == password
+    
     # In ra 
     def display_info(self):
         print("Số tài khoản: ", self.account_id)
