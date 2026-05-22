@@ -40,7 +40,7 @@ class AccountService:
                               create_at = create_at, 
                               time_created=None  )
         
-        self.account_storage.insert(new_account)   # Adjust if your HashTable needs key-value
+        self.account_storage.insert(account_id, new_account)   # Adjust if your HashTable needs key-value
 
         return new_account
 
