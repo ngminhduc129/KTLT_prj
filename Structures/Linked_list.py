@@ -1,5 +1,4 @@
-import Node
-
+from Structures.Node import Node
 
 class LinkedList:
     def __init__(self):
