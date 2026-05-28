@@ -11,19 +11,22 @@ class LinkedList:
 
     def length(self):
         return self._size
+    
+    def append(self, key, value):
+        new_node = Node(key, value)
 
-    def append(self, key, value=None):
-        new_node = Node(key, value) if value is not None else Node(None, key)
         if self.is_empty():
             self.head = self.tail = new_node
         else:
             self.tail.next = new_node
             new_node.prev = self.tail
             self.tail = new_node
+
         self._size += 1
 
-    def prepend(self, key, value=None):
-        new_node = Node(key, value) if value is not None else Node(None, key)
+    def prepend(self, key, value):
+        new_node = Node(key, value)
+        
         if self.is_empty():
             self.head = self.tail = new_node
         else:

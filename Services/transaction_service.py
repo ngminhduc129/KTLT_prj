@@ -35,13 +35,20 @@ class TransactionService():
             balance_after= balance_after
         )
 
-        self.trans_storage.append(new_trans.trans_id, new_trans)
+        self.trans_storage.append(new_trans)
         return new_trans
     
 
-    def get_transaction_by_account(self):
+    def get_transaction_by_account(self, account: str):
         '''
+
         '''
+
+        node = self.trans_storage.head
+
+        while(node != None):
+            if node.from_account == account:
+                print(f"Trans id: {node.trans_id}, To: {node.to_account}, Transaction type: {node.}")
     
 if __name__ == "__main__":
     sv = TransactionService()
