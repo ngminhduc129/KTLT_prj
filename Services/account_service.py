@@ -2,6 +2,7 @@ from Structures.Hash_table import Hash_table
 from Models.account import Account
 from Services.user_service import UserService
 from Structures.Linked_list import LinkedList
+from typing import Tuple
 class AccountService:
     """
     Service layer for managing bank accounts.
@@ -53,7 +54,7 @@ class AccountService:
             ValueError: If account doesn't exist or password is wrong
         """
         account = self.account_storage.search(account_id)
-        
+
         if not account:
             raise ValueError(f"Account {account_id} does not exist")
         
@@ -63,7 +64,7 @@ class AccountService:
         return account
 
 
-    def deposit(self, account_id: str, pin: str, amount: float) -> Account:
+    def deposit(self, account_id: str, pin: str, amount: float, password: str) -> Account:
         """
         Deposit money into an account.
         
@@ -77,6 +78,9 @@ class AccountService:
         if account is None:
             raise ValueError(f"Account {account_id} does not exist")
 
+        if account.password != password:
+            raise ValueError("Invalid Password")
+
         if account.pin != pin:
             raise ValueError("Invalid PIN")
 
@@ -85,7 +89,7 @@ class AccountService:
         return account
     
 
-    def withdraw(self, account_id: str, pin: str, amount: float) -> Account:
+    def withdraw(self, account_id: str, pin: str, amount: float, password: str) -> Account:
         '''
         Withdraw money from an account
 
@@ -98,6 +102,9 @@ class AccountService:
         if account is None:
             raise ValueError(f"Account {account_id} does not exist")
         
+        if account.password != password:
+            raise ValueError(f"Invalid Password")
+
         if account.pin != pin:
             raise ValueError("Invalid PIN")
         
@@ -115,7 +122,7 @@ class AccountService:
     
 
     def transfer(self, source_account_id: str, target_account_id: str, 
-                 amount: float, pin: str):
+                 amount: float, pin: str, password: str) -> Tuple[Account, Account]: 
         '''
         Transfer money from source account to target account.
         
@@ -131,6 +138,9 @@ class AccountService:
         if source is None:
             raise ValueError(f"Source account {source_account_id} does not exist")
         
+        if source.password != password:
+            raise ValueError("Invalid Password")    
+
         if source.pin != pin:
             raise ValueError("Invalid PIN")
 
@@ -180,7 +190,7 @@ class AccountService:
         if is_empty:
             print("No users found")
 
-    def get_accounts_by_user_id(self, user_id): # DNB design not sure correct so NMD dung le nha le nhe
+    def get_accounts_by_user_id(self, user_id) -> LinkedList: # DNB design not sure correct so NMD dung le nha le nhe
         accounts_of_user_id = LinkedList()
         for bucket in self.account_storage.table:
             current = bucket

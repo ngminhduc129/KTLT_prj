@@ -9,19 +9,17 @@ class SavingService:
 
     def create_saving(
             self, 
-            deposit_id: str,
+            saving_id: str,
             owner_account_id: str,
             amount: float,
-            interest_rate: float,
-            term: int,
             start_date: str) -> SavingDeposit:
         """
-        Create a new saving deposit with a random generated deposit_id and given parameters
+        Create a new saving deposit with a random generated saving_id and given parameters
         Raises:
-            ValuerError: If deposit_id already exists
+            ValuerError: If saving_id already exists
         """
-        if self.saving_storage.search(deposit_id) is not None:
-            raise ValueError(f"Saving deposit {deposit_id} already exists")
+        if self.saving_storage.search(saving_id) is not None:
+            raise ValueError(f"Saving deposit {saving_id} already exists")
         try:
             account_service = AccountService()
             account = account_service.account_storage.search(owner_account_id)
@@ -32,22 +30,23 @@ class SavingService:
         except ValueError:
             full_name = "Unknown User"
             user_id = "Unknown User"
-        
+
+        term = "NO TERM"
+
         new_saving = SavingDeposit(
-            deposit_id, 
+            saving_id, 
             owner_account_id, 
             full_name,
             user_id, 
             amount,
-            interest_rate,
             term,
             start_date,
             maturity_date = None,
-            status = "Active"
+            status = "ACTIVE"
         )
 
         # Add a saving deposit into HashTable
-        self.saving_storage.insert(deposit_id, new_saving)
+        self.saving_storage.insert(saving_id, new_saving)
 
         return new_saving
     
@@ -62,28 +61,35 @@ class SavingService:
 
         return months
 
-    def calculate_interest(self, deposit_id) -> SavingDeposit:
+    def calculate_interest(self, saving_id):
         # Find your saving deposit
-        saving = self.saving_storage.search(deposit_id)
+        saving = self.saving_storage.search(saving_id)
         if saving is None:
-            raise ValueError(f"Saving account {deposit_id} does not exits")
+            raise ValueError(f"Saving account {saving_id} does not exits")
 
         # calculating the number of months that users deposit savings
-        months = self.get_months_passed(saving.start_date)
+        if saving.maturity_date is None:
+            final_settlement_date = saving.start_date
+        else:
+            final_settlement_date = saving.maturity_date
+        months = self.get_months_passed(final_settlement_date)
         amount = saving.amount
-        interest_rate = saving.interest_rate
+
+        # Set up interest rate = 0.2%/month
+        interest_rate = 0.002
         # Total interest for months
         interest = amount * interest_rate * months
 
         return interest
     
-    def close_saving(self, deposit_id):
-        saving = self.saving_storage.search(deposit_id)
+    def close_saving(self, saving_id) -> SavingDeposit:
+        saving = self.saving_storage.search(saving_id)
         if saving is None:
-            raise ValueError(f"Saving account {deposit_id} does not exists")
+            raise ValueError(f"Saving account {saving_id} does not exists")
         # Update status of saving from Active to Invalid
         saving.status = "Invalid"
-        saving.maturity_date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        saving.close_date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        saving.amount = 0
         return saving
     
     def get_users_saving(self):
@@ -111,7 +117,19 @@ class SavingService:
         # Generate a random saving deposit id with format "STK" + 6 digits
         import random
         while True:
-            deposit_id = "STK" + str(random.randint(000000, 999999)).zfill(6)
-            if self.saving_storage.search(deposit_id) is None:
-                return deposit_id
-            
+            saving_id = "STK" + str(random.randint(000000, 999999)).zfill(6)
+            if self.saving_storage.search(saving_id) is None:
+                return saving_id
+
+    def find_saving_account(self, saving_id: str) -> SavingDeposit:
+        """
+        Find and return a saving account by saving_id
+
+        Raise:
+            ValuerError: if the saving account does not exist
+        """
+        saving_account = self.saving_storage.search(saving_id)
+        
+        if saving_account is None:
+            raise ValueError(f"Saving Account with {saving_id} does not exist")
+        return saving_account
