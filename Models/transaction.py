@@ -2,7 +2,7 @@ from datetime import datetime, date
 class Transaction:
     def __init__(
             self, 
-            trans_id: str, 
+            trans_id: int, 
             from_account: str, 
             to_account: str, 
             type_trans: str, 
@@ -42,7 +42,7 @@ class Transaction:
     def from_file_string(line):
          data = line.strip().split('|')
          return Transaction(
-             trans_id=data[0],
+             trans_id=int(data[0]),
              from_account=data[1],
              to_account=data[2],
              type_trans=data[3],

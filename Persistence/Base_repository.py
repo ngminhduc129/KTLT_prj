@@ -63,7 +63,7 @@ class Base_repository:
 
         # Duyệt qua từng Node theo cơ chế của danh sách liên kết
         while current_node is not None:
-            obj = current_node.data # Trích xuất Object (User/Account) ra khỏi Node
+            obj = current_node.value
             
             # Yêu cầu Object tự đóng gói dữ liệu của nó thành chuỗi thô
             final_string += obj.to_file_string() + '\n'
