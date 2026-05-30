@@ -46,7 +46,7 @@ class SavingService:
         )
 
         # Add a saving deposit into HashTable
-        self.saving_storage.insert(new_saving)
+        self.saving_storage.insert(new_saving.saving_id, new_saving)
 
         return new_saving
     
