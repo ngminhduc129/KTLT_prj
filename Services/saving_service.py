@@ -46,7 +46,7 @@ class SavingService:
         )
 
         # Add a saving deposit into HashTable
-        self.saving_storage.insert(new_saving)
+        self.saving_storage.insert(saving_id, new_saving)
 
         return new_saving
     
@@ -57,7 +57,7 @@ class SavingService:
         
         months = (maturity.year - start.year) * 12 + (maturity.month - start.month) 
         if months < start.day:
-            months -= -1
+            months -= 1
 
         return months
 

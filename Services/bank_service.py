@@ -382,7 +382,7 @@ class BankService:
         except ValueError as e:
             print(e)
         
-    def show_statement():
+    def show_statement(self):
         pass
 
     

@@ -36,7 +36,7 @@ class Base_repository:
                     # Gọi Factory Method của Model để tự nó cắt chuỗi và tạo Object.
                     # Base_repository không cần biết cấu trúc chuỗi có bao nhiêu phần tử.
                     obj = self.model_class.from_file_string(current_line)
-                    data_list.append(obj)
+                    data_list.append(None, obj)
                 current_line = ""
                 
             elif char != '\r': 
@@ -46,7 +46,7 @@ class Base_repository:
         # Nếu dòng dữ liệu cuối cùng của file không có dấu xuống dòng (\n)
         if current_line != "":
             obj = self.model_class.from_file_string(current_line)
-            data_list.append(obj)
+            data_list.append(None, obj)
             
         return data_list
     
