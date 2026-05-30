@@ -450,8 +450,63 @@ class BankService:
             saving.display_info()
         except ValueError as e:
             print(e)
-        
-    def show_statement():
-        pass
 
-    
+    def save_all_data(self):
+        User_repository.save_data(
+            self.user_service.get_all_users()
+        )
+
+        Account_repository.save_data(
+            self.account_service.get_all_accounts()
+        )
+
+        Saving_repository.save_data(
+            self.saving_service.get_all_savings()
+        )
+
+        transactions = self.transaction_service.get_all_transactions()
+        for transaction in transactions:
+            Transaction_repository.append_data(
+                transaction
+            )
+
+    def load_all_data(self):
+        user_repo = User_repository()
+        users = user_repo.load_data()
+        while users.head is not None:
+            user: User = users.head.value
+            self.user_service.user_storage.insert(
+                user.user_id,
+                user
+            )
+            users.head = users.head.next
+
+        account_repo = Account_repository()
+        accounts = account_repo.load_data()
+        while accounts.head is not None:
+            account: Account = accounts.head.value
+            self.account_service.account_storage.insert(
+                account.account_id,
+                account
+            )
+            accounts.head = accounts.head.next
+        
+        saving_repo = Saving_repository()
+        savings = saving_repo.load_data()
+        while savings.head is not None:
+            saving: SavingDeposit = savings.head.value
+            self.saving_service.saving_storage.insert(
+                saving.saving_id,
+                saving
+            )
+            savings.head = savings.head.next
+
+        trans_repo = Transaction_repository()
+        transactions = trans_repo.load_data()
+        for transaction in transactions:
+            transaction: Transaction
+            self.transaction_service.trans_storage.append(
+                transaction.trans_id,
+                transaction
+            )
+        
