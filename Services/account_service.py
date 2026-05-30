@@ -41,7 +41,7 @@ class AccountService:
                               create_at = create_at, 
                               time_created=None  )
         
-        self.account_storage.insert(account_id, new_account)   # Adjust if your HashTable needs key-value
+        self.account_storage.insert(new_account.account_id, new_account)   # Adjust if your HashTable needs key-value
 
         return new_account
 
@@ -64,7 +64,7 @@ class AccountService:
         return account
 
 
-    def deposit(self, account_id: str, pin: str, amount: float, password: str) -> Account:
+    def deposit(self, account_id: str, pin: str, amount: float) -> Account:
         """
         Deposit money into an account.
         
@@ -78,9 +78,6 @@ class AccountService:
         if account is None:
             raise ValueError(f"Account {account_id} does not exist")
 
-        if account.password != password:
-            raise ValueError("Invalid Password")
-
         if account.pin != pin:
             raise ValueError("Invalid PIN")
 
@@ -89,7 +86,7 @@ class AccountService:
         return account
     
 
-    def withdraw(self, account_id: str, pin: str, amount: float, password: str) -> Account:
+    def withdraw(self, account_id: str, pin: str, amount: float) -> Account:
         '''
         Withdraw money from an account
 
@@ -101,9 +98,6 @@ class AccountService:
         
         if account is None:
             raise ValueError(f"Account {account_id} does not exist")
-        
-        if account.password != password:
-            raise ValueError(f"Invalid Password")
 
         if account.pin != pin:
             raise ValueError("Invalid PIN")
@@ -201,6 +195,8 @@ class AccountService:
                 current = current.next
         return accounts_of_user_id
 
+    def get_all_accounts(self):
+        return self.account_storage.values()
 
     def change_pin(self, account_id: str, password: str, old_pin: str, new_pin: str) -> Account:
         '''
@@ -273,3 +269,15 @@ class AccountService:
 
         return account
 
+    def generate_account_id(self):
+        """
+        Generate a unique random account ID
+        Format: AC + 6 random digits
+        Return: str: unique account id
+        """
+        import random
+
+        while True:
+            account_id = "AC" + str(random.randint(0, 999999)).zfill(6)
+            if self.account_storage.search(account_id) is None:
+                return account_id

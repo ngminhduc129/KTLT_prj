@@ -1,16 +1,22 @@
 from Services.user_service import UserService
 from Services.account_service import AccountService
 from Services.saving_service import SavingService
+from Services.transaction_service import TransactionService
 from Models.user import User
 from Models.account import Account
 from Models.saving_deposit import SavingDeposit
 from Models.transaction import Transaction
 from datetime import datetime
+from Persistence.User_repository import User_repository
+from Persistence.Account_repository import Account_repository
+from Persistence.Saving_repository import Saving_repository
+from Persistence.Transaction_repository import Transaction_repository
 class BankService:
     def __init__(self):
         self.user_service = UserService()
         self.account_service = AccountService()
         self.saving_service = SavingService()
+        self.transaction_service = TransactionService()
 
     def create_customer_and_account(self):
         print("Please to import some useful information")
@@ -42,7 +48,7 @@ class BankService:
 
 
         # Information for creating accout in AccountService()
-        account_id = input() # Generate random use def generate_account_id from AccountService
+        account_id = self.account_service.generate_account_id()
         while True:
             password = input("Password: ")
             if not password:
@@ -131,7 +137,6 @@ class BankService:
 
         account_id = input("Account ID: ")
 
-        password = input("Password: ")
 
         # Enter the amount of money that you wanna deposit into this account
         try:
@@ -147,20 +152,28 @@ class BankService:
             updated_account = self.account_service.deposit(
                 account_id,
                 pin,
-                amount,
-                password
+                amount
             )
 
             print("\nDeposit successfully!")
 
             updated_account.display_info()
-
+            # Add transaction
+            new_trans = self.transaction_service.add_transaction(
+                from_account=None,
+                to_account=account_id,
+                type_trans="Deposit",
+                amount=amount,
+                description=f"User {user_id} deposit money",
+                balance_after=updated_account.balance
+            )
+            print("\nDepositing Information: ")
+            new_trans.display_info()
         except ValueError as e:
 
             print(e)
 
-        # Add transaction " Cho ban NMD"
-        
+
     def withdraw_money(self):
         """
         Withdraw by QR
@@ -191,7 +204,6 @@ class BankService:
 
         account_id = input("Account ID: ")
 
-        password = input("Password: ")
 
         # Enter the amount of money that you wanna withdraw 
         try:
@@ -207,16 +219,25 @@ class BankService:
             update_account = self.account_service.withdraw(
                 account_id,
                 pin,
-                amount,
-                password
+                amount
             )
             print("\nWithdraw successfully!")
             update_account.display_info()
+            # Add transaction
+            new_trans = self.transaction_service.add_transaction(
+                from_account=account_id,
+                to_account=None,
+                type_trans="Withdraw",
+                amount=amount,
+                description=f"User {user_id} withdraw money from ATM",
+                balance_after=update_account.balance
+            )
+            print("Withdrawing infromation: ")
+            new_trans.display_info()
         except ValueError as e:
             print(e)
         
-        # Add transaction
-    # Add transaction
+
     def transfer_money(self):
         # Information of source account
         # Log in
@@ -282,10 +303,35 @@ class BankService:
 
             print("\nUpdated target account:")
             updated_account_target.display_info()
+            # Add transaction
+                # Source:
+            source_trans = self.transaction_service.add_transaction(
+                from_account=account_id_source,
+                to_account=account_id_target,
+                type_trans="Transfer",
+                amount=amount,
+                description=f"User {account_id_source} transfer money",
+                balance_after=updated_account_source.balance
+            )
+            
+                # Target:
+            target_trans = self.transaction_service.add_transaction(
+                from_account=account_id_source,
+                to_account=account_id_target,
+                type_trans="Receive",
+                amount=amount,
+                description=f"Receive moeny from User {account_id_source}",
+                balance_after=updated_account_target.balance
+            )
+
+            print("Transfering Information: ")
+            source_trans.display_info()
+            target_trans.display_info()
+            
         except ValueError as e:
             print(e)
 
-        # Add transaction...
+
 
     def create_saving(self):
         print("Please enter some neccessary infromation to create your saving account")
@@ -339,6 +385,18 @@ class BankService:
             account = self.account_service.deposit(account_id, pin, interest, password)
             print("Deposit successfully!")
             account.display_info()
+
+            # Add transaction
+            saving_trans = self.transaction_service.add_transaction(
+                from_account=None, 
+                to_account=account_id,
+                type_trans="Interest",
+                amount=interest,
+                description="Bank transfer interest",
+                balance_after=account.balance
+            )
+            print("Transfering Information: ")
+            saving_trans.display_info()
         except ValueError as e:
             print(e)
 
@@ -369,10 +427,21 @@ class BankService:
             account = self.account_service.deposit(saving_account.owner_account_id, pin, final_receieved_money , password)
             print("Deposit successfully!")
             account.display_info()
+
+            # Add transaction
+            saving_trans = self.transaction_service.add_transaction(
+                from_account=None,
+                to_account=saving_account.owner_account_id,
+                type_trans="Settlement Saving Account",
+                amount=final_receieved_money,
+                description=f"The bank closed the savings account",
+                balance_after=account.balance
+            )
+            print("Settlement Infromation: ")
+            saving_trans.display_info()
+
         except ValueError as e:
             print(e)
-
-        # Add transaction
 
         # Close saving account
         try:
@@ -381,8 +450,63 @@ class BankService:
             saving.display_info()
         except ValueError as e:
             print(e)
-        
-    def show_statement():
-        pass
 
-    
+    def save_all_data(self):
+        User_repository.save_data(
+            self.user_service.get_all_users()
+        )
+
+        Account_repository.save_data(
+            self.account_service.get_all_accounts()
+        )
+
+        Saving_repository.save_data(
+            self.saving_service.get_all_savings()
+        )
+
+        transactions = self.transaction_service.get_all_transactions()
+        for transaction in transactions:
+            Transaction_repository.append_data(
+                transaction
+            )
+
+    def load_all_data(self):
+        user_repo = User_repository()
+        users = user_repo.load_data()
+        while users.head is not None:
+            user: User = users.head.value
+            self.user_service.user_storage.insert(
+                user.user_id,
+                user
+            )
+            users.head = users.head.next
+
+        account_repo = Account_repository()
+        accounts = account_repo.load_data()
+        while accounts.head is not None:
+            account: Account = accounts.head.value
+            self.account_service.account_storage.insert(
+                account.account_id,
+                account
+            )
+            accounts.head = accounts.head.next
+        
+        saving_repo = Saving_repository()
+        savings = saving_repo.load_data()
+        while savings.head is not None:
+            saving: SavingDeposit = savings.head.value
+            self.saving_service.saving_storage.insert(
+                saving.saving_id,
+                saving
+            )
+            savings.head = savings.head.next
+
+        trans_repo = Transaction_repository()
+        transactions = trans_repo.load_data()
+        for transaction in transactions:
+            transaction: Transaction
+            self.transaction_service.trans_storage.append(
+                transaction.trans_id,
+                transaction
+            )
+        
