@@ -24,7 +24,7 @@ class UserService:
 
         new_user = User(user_id, full_name, phone, email, sex, address, job, dob)
         
-        self.user_storage.insert(user_id, new_user)
+        self.user_storage.insert(new_user.user_id, new_user)
 
         return new_user
 
@@ -97,3 +97,6 @@ class UserService:
 
         if is_empty:
             print("No users found")
+    
+    def get_all_users(self):
+        return self.user_storage.values()

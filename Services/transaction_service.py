@@ -77,7 +77,8 @@ class TransactionService():
         if not check:
             raise ValueError("No transaction found")
     
-    
+    def get_all_transactions(self):
+        return self.trans_storage
 
 if __name__ == "__main__":
     sv = TransactionService()

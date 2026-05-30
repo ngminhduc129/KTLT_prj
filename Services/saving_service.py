@@ -46,7 +46,7 @@ class SavingService:
         )
 
         # Add a saving deposit into HashTable
-        self.saving_storage.insert(saving_id, new_saving)
+        self.saving_storage.insert(new_saving)
 
         return new_saving
     
@@ -133,3 +133,6 @@ class SavingService:
         if saving_account is None:
             raise ValueError(f"Saving Account with {saving_id} does not exist")
         return saving_account
+    
+    def get_all_savings(self):
+        return self.saving_storage.values()

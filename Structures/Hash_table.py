@@ -1,4 +1,5 @@
 from Structures.Node import Node
+from Structures.Linked_list import LinkedList
 class Hash_table:
     def __init__(self, capacity=10):
         self.capacity = capacity
@@ -90,3 +91,21 @@ class Hash_table:
                     current = current.next
                 items += "None"
                 print(f"Bucket {i:02}: {items}")
+
+    def values(self):
+
+        result = LinkedList()
+
+        for bucket in self.table:
+
+            current = bucket
+
+            while current is not None:
+
+                result.append(
+                    current.value
+                )
+
+                current = current.next
+
+        return result

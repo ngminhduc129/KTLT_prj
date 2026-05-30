@@ -14,7 +14,7 @@ class Base_repository:
         # để biết cách khởi tạo đối tượng tương ứng lúc đọc dữ liệu.
         self.model_class = model_class
 
-    def load_data(self):
+    def load_data(self) -> LinkedList:
         """
         Đọc văn bản từ file và chuyển thành đối tượng.
         Trả về: Cấu trúc dữ liệu LinkedList chứa các object.
@@ -50,7 +50,7 @@ class Base_repository:
             
         return data_list
     
-    def save_data(self, linked_list):
+    def save_data(self, linked_list: LinkedList):
         """
         Duyệt qua LinkedList và ghi đè toàn bộ dữ liệu xuống file.
         Cách làm: Yêu cầu từng Object tự đóng gói dữ liệu của nó thành chuỗi thô 
