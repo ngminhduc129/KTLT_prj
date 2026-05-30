@@ -42,6 +42,7 @@ class SavingService:
             term,
             start_date,
             maturity_date = None,
+            close_date = None,
             status = "ACTIVE"
         )
 
@@ -56,7 +57,7 @@ class SavingService:
         maturity = datetime.now()
         
         months = (maturity.year - start.year) * 12 + (maturity.month - start.month) 
-        if months < start.day:
+        if maturity.day < start.day:
             months -= 1
 
         return months

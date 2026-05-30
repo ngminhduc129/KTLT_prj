@@ -379,10 +379,9 @@ class BankService:
 
         # Deposit money into the original bank account
         print("Please enter some neccessary infromation to log in your bank account")
-        password = input("Password: ")
         pin = input("Pin: ")
         try:
-            account = self.account_service.deposit(account_id, pin, interest, password)
+            account = self.account_service.deposit(account_id, pin, interest)
             print("Deposit successfully!")
             account.display_info()
 

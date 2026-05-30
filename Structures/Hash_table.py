@@ -103,6 +103,7 @@ class Hash_table:
             while current is not None:
 
                 result.append(
+                    current.key,
                     current.value
                 )
 

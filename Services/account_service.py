@@ -81,6 +81,9 @@ class AccountService:
         if account.pin != pin:
             raise ValueError("Invalid PIN")
 
+        if account.status == "Lock": 
+            raise ValueError("Account is locked")
+
         account.balance += amount
         
         return account
@@ -110,6 +113,9 @@ class AccountService:
         if amount > balance:
             raise ValueError("Withdraw amount must be less than balance")
         
+        if account.status == "Lock": 
+            raise ValueError("Account is locked")
+
         account.balance -= amount
         
         return account
@@ -148,6 +154,8 @@ class AccountService:
         if target is None:
             raise ValueError(f"Target account {target_account_id} does not exist")
 
+        if source.status == "Lock":
+            raise ValueError("Account is locked")
         source.balance -= amount
         target.balance += amount
 
@@ -184,14 +192,14 @@ class AccountService:
         if is_empty:
             print("No users found")
 
-    def get_accounts_by_user_id(self, user_id) -> LinkedList: # DNB design not sure correct so NMD dung le nha le nhe
+    def get_accounts_by_user_id(self, user_id) -> LinkedList: 
         accounts_of_user_id = LinkedList()
         for bucket in self.account_storage.table:
             current = bucket
             while current is not None:
                 account = current.value
                 if account.user_id == user_id:
-                    accounts_of_user_id.append(account)
+                    accounts_of_user_id.append(account.account_id, account)
                 current = current.next
         return accounts_of_user_id
 
@@ -237,10 +245,10 @@ class AccountService:
         if account.pin != pin:
             raise ValueError("Invalid pin")
 
-        if account.status == "Unlock":
-            raise ValueError("The account is already unlock")
+        if account.status == "Active":
+            raise ValueError("The account is already active")
 
-        account.status = "Unlock"
+        account.status = "Active"
 
         return account
     
