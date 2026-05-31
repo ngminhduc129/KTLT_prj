@@ -4,8 +4,9 @@ from Models.saving_deposit import SavingDeposit
 from Services.account_service import AccountService
 from datetime import datetime
 class SavingService:
-    def __init__(self):
+    def __init__(self, account_service=None):
         self.saving_storage = Hash_table()
+        self.account_service = account_service
 
     def create_saving(
             self, 
@@ -21,10 +22,11 @@ class SavingService:
         if self.saving_storage.search(saving_id) is not None:
             raise ValueError(f"Saving deposit {saving_id} already exists")
         try:
-            account_service = AccountService()
-            account = account_service.account_storage.search(owner_account_id)
-            if account is None:
-                raise ValueError(f"Account {owner_account_id} does not exist")
+            # account_service = AccountService()
+            # account = account_service.account_storage.search(owner_account_id)
+            account = self.account_service.find_account(owner_account_id)
+            # if account is None:
+            #     raise ValueError(f"Account {owner_account_id} does not exist")
             full_name = account.full_name
             user_id = account.user_id
         except ValueError:

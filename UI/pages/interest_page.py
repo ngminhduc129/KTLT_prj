@@ -18,14 +18,14 @@ class InterestPage(QWidget):
         f_layout.setSpacing(10)
 
         self.mw.int_saving_id = QLineEdit()
-        self.mw.int_password = QLineEdit()
-        self.mw.int_password.setEchoMode(QLineEdit.Password)
+        # self.mw.int_password = QLineEdit()
+        # self.mw.int_password.setEchoMode(QLineEdit.Password)
         self.mw.int_pin = QLineEdit()
         self.mw.int_pin.setEchoMode(QLineEdit.Password)
         self.mw.int_pin.setMaxLength(6)
 
         f_layout.addRow("Mã sổ tiết kiệm:", self.mw.int_saving_id)
-        f_layout.addRow("Mật khẩu:", self.mw.int_password)
+        # f_layout.addRow("Mật khẩu:", self.mw.int_password)
         f_layout.addRow("Mã PIN:", self.mw.int_pin)
 
         self.mw.int_info = QLabel()

@@ -63,8 +63,12 @@ class SavingPage(QWidget):
             saving = mw.bank.create_saving(account_id, amount)
             msg = (f"Tạo sổ tiết kiệm thành công!\n\n"
                    f"Mã số: {saving.saving_id}\n"
+                   f"Họ và tên: {saving.full_name}\n"
+                   f"Mã khách hàng: {saving.user_id}\n"
                    f"Số tiền: {saving.amount:,.0f} VND\n"
-                   f"Trạng thái: {saving.status}")
+                   f"Trạng thái: {saving.status}\n"
+                   f"Kỳ hạn: {saving.term}\n"
+                   f"Ngày phát hành: {saving.start_date}")
             mw.sav_result.setText(msg)
             mw._show_success("Tạo sổ tiết kiệm thành công!")
         except ValueError as e:

@@ -17,12 +17,21 @@ class BankService:
     def __init__(self):
         self.user_service = UserService()
         self.account_service = AccountService(self.user_service)
-        self.saving_service = SavingService()
+        self.saving_service = SavingService(self.account_service)
         self.transaction_service = TransactionService()
 
     def create_customer_and_account(self, user_id, full_name, phone, email,
                                      sex, address, job, dob,
                                      password, pin, branch):
+        
+        if not phone or not phone.isdigit():
+            raise ValueError("Phone must be all numbers.")
+        if len(phone) != 10:
+            raise ValueError("Phone must have 10 numbers.")
+        
+        # if not self.user_service.validate_email(email):
+        #     raise ValueError("Invalid email format.")
+
         special_chars = "!@#$%^&*()-_=+[]{}|;:',.<>?/"
         if not password:
             raise ValueError("Password is empty.")

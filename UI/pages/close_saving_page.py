@@ -18,14 +18,14 @@ class CloseSavingPage(QWidget):
         f_layout.setSpacing(10)
 
         self.mw.cls_saving_id = QLineEdit()
-        self.mw.cls_password = QLineEdit()
-        self.mw.cls_password.setEchoMode(QLineEdit.Password)
+        # self.mw.cls_password = QLineEdit()
+        # self.mw.cls_password.setEchoMode(QLineEdit.Password)
         self.mw.cls_pin = QLineEdit()
         self.mw.cls_pin.setEchoMode(QLineEdit.Password)
         self.mw.cls_pin.setMaxLength(6)
 
         f_layout.addRow("Mã sổ tiết kiệm:", self.mw.cls_saving_id)
-        f_layout.addRow("Mật khẩu:", self.mw.cls_password)
+        # f_layout.addRow("Mật khẩu:", self.mw.cls_password)
         f_layout.addRow("Mã PIN:", self.mw.cls_pin)
 
         self.mw.cls_info = QLabel()
