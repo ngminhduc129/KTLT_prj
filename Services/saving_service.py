@@ -109,7 +109,7 @@ class SavingService:
             current = bucket
             while current is not None:
                 active = current.value
-                if active.status == "Active":
+                if active.status == "ACTIVE":
                     active_savings.append(current.key, active)
                 current = current.next
         return active_savings

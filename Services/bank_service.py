@@ -131,7 +131,7 @@ class BankService:
         total = saving_account.amount + interest
 
         account = self.account_service.deposit(
-            saving_account.owner_account_id, pin, total, password
+            saving_account.owner_account_id, pin, total
         )
         trans = self.transaction_service.add_transaction(
             from_account=None,
@@ -159,8 +159,10 @@ class BankService:
         )
 
         transactions = self.transaction_service.get_all_transactions()
-        for transaction in transactions:
-            Transaction_repository.append_data(transaction)
+        current = transactions.head
+        while current is not None:
+            Transaction_repository.append_data(current.value)
+            current = current.next
 
     def load_all_data(self):
         user_repo = User_repository()
@@ -195,9 +197,11 @@ class BankService:
 
         trans_repo = Transaction_repository()
         transactions = trans_repo.load_data()
-        for transaction in transactions:
-            transaction: Transaction
+        current = transactions.head
+        while current is not None:
+            transaction: Transaction = current.value
             self.transaction_service.trans_storage.append(
                 transaction.trans_id,
                 transaction
             )
+            current = current.next
