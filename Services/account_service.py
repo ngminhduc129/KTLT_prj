@@ -1,16 +1,17 @@
 from Structures.Hash_table import Hash_table
 from Models.account import Account
-from Services.user_service import UserService
 from Structures.Linked_list import LinkedList
 from typing import Tuple
+
 class AccountService:
     """
     Service layer for managing bank accounts.
     This class handles all business logic related to accounts.
     """
 
-    def __init__(self):
+    def __init__(self, user_service=None):
         self.account_storage = Hash_table()
+        self.user_service = user_service
 
 
     def create_account(self, account_id: str, password: str,
@@ -25,8 +26,7 @@ class AccountService:
             raise ValueError(f"Account {account_id} already exists")
         
         try:
-            user_service = UserService()                    
-            user = user_service.find_user_by_id(user_id)
+            user = self.user_service.find_user_by_id(user_id)
             full_name = user.full_name
         except ValueError:
             full_name = "Unknown User"

@@ -16,7 +16,7 @@ from Persistence.Transaction_repository import Transaction_repository
 class BankService:
     def __init__(self):
         self.user_service = UserService()
-        self.account_service = AccountService()
+        self.account_service = AccountService(self.user_service)
         self.saving_service = SavingService()
         self.transaction_service = TransactionService()
 
