@@ -36,6 +36,8 @@ class HomePage(QWidget):
             "Sổ tiết kiệm (Saving Deposit)",
             "Lịch sử giao dịch",
             "Tra cứu tài khoản",
+            "Cập nhật thông tin",
+            "Đổi mật khẩu và mã PIN"
         ]
         for f in features:
             lbl = QLabel(f"  {f}")

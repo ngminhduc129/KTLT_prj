@@ -19,7 +19,7 @@ from UI.pages.interest_page import InterestPage
 from UI.pages.close_saving_page import CloseSavingPage
 from UI.pages.history_page import HistoryPage
 from UI.pages.find_page import FindPage
-
+from UI.pages.update_information_page import UpdateInformationPage
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -55,18 +55,19 @@ class MainWindow(QMainWindow):
             "Trang chủ", "Tạo khách hàng + Tài khoản", "Nạp tiền",
             "Rút tiền", "Chuyển khoản", "Sổ tiết kiệm",
             "Rút lãi tiết kiệm", "Tất toán sổ tiết kiệm",
-            "Lịch sử giao dịch", "Tra cứu"
+            "Lịch sử giao dịch", "Tra cứu", "Cập nhật thông tin", "Đổi mật khẩu và mã PIN"
         ]
         page_wrappers = ["Tổng quan", "Tạo khách hàng & Tài khoản",
             "Nạp tiền vào tài khoản", "Rút tiền từ tài khoản",
             "Chuyển khoản", "Tạo sổ tiết kiệm", "Rút lãi tiết kiệm",
-            "Tất toán sổ tiết kiệm", "Lịch sử giao dịch", "Tra cứu thông tin"]
+            "Tất toán sổ tiết kiệm", "Lịch sử giao dịch", "Tra cứu thông tin", 
+            "Cập nhật thông tin khách hàng", "Đổi mật khẩu và mã PIN"]
 
         pages = [
             HomePage(self), CustomerPage(self), DepositPage(self),
             WithdrawPage(self), TransferPage(self), SavingPage(self),
             InterestPage(self), CloseSavingPage(self), HistoryPage(self),
-            FindPage(self)
+            FindPage(self), UpdateInformationPage(self)
         ]
 
         self.menu = QListWidget()
