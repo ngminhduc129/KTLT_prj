@@ -11,9 +11,11 @@ class FileHandler:
             return file.read()
 
     def write_file(self, data):
+        os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
         with open(self.file_path, 'w', encoding="utf-8") as file:
             file.write(data)  
 
     def append_file(self, data):
+        os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
         with open(self.file_path, 'a', encoding="utf-8") as file:
             file.write(data)

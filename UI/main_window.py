@@ -28,6 +28,10 @@ class MainWindow(QMainWindow):
         self.bank.load_all_data()
         self._setup_ui()
 
+    def closeEvent(self, event):
+        self.bank.save_all_data()
+        event.accept()
+
     def _setup_ui(self):
         self.setWindowTitle("NGAN HANG DBC - He Thong Quan Ly Tai Khoan")
         self.setMinimumSize(1200, 800)
