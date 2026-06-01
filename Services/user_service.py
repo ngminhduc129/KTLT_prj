@@ -101,7 +101,7 @@ class UserService:
     def get_all_users(self):
         return self.user_storage.values()
     
-    def validate_email(email):
+    def validate_email(self, email):
         if not email:
             raise ValueError("Email cannot be empty.")
 
