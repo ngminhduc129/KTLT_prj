@@ -55,6 +55,9 @@ class BankService:
         )
         return user, account
 
+    def create_account(self, user_id, password, pin, branch):
+        pass
+
     def deposit_money(self, account_id, amount, pin):
         if amount <= 0:
             raise ValueError("Amount must be greater than 0.")
