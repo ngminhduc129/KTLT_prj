@@ -155,22 +155,22 @@ class BankService:
         return account, total
 
     def save_all_data(self):
-        User_repository.save_data(
+        User_repository().save_data(
             self.user_service.get_all_users()
         )
 
-        Account_repository.save_data(
+        Account_repository().save_data(
             self.account_service.get_all_accounts()
         )
 
-        Saving_repository.save_data(
+        Saving_repository().save_data(
             self.saving_service.get_all_savings()
         )
 
         transactions = self.transaction_service.get_all_transactions()
         current = transactions.head
         while current is not None:
-            Transaction_repository.append_data(current.value)
+            Transaction_repository().append_data(current.value)
             current = current.next
 
     def load_all_data(self):

@@ -106,7 +106,8 @@ class CustomerPage(QWidget):
                    f"Họ tên: {user.full_name}\n\n"
                    f"Tài khoản: {account.account_id}\n"
                    f"Số dư: {account.balance:,.0f} VND")
+            mw.bank.save_all_data()
             mw._show_success(msg)
             self._clear()
-        except ValueError as e:
+        except Exception as e:
             mw._show_error(str(e))
