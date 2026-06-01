@@ -25,6 +25,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.bank = BankService()
+        self.bank.load_all_data()
         self._setup_ui()
 
     def _setup_ui(self):
@@ -93,7 +94,7 @@ class MainWindow(QMainWindow):
         layout = QHBoxLayout(header)
         layout.setContentsMargins(15, 5, 15, 5)
 
-        title = QLabel("NGÂN HÀNG ABC")
+        title = QLabel("NGÂN HÀNG DBC")
         title.setObjectName("headerTitle")
         layout.addWidget(title)
 
@@ -214,6 +215,21 @@ class MainWindow(QMainWindow):
             background-color: white;
             min-width: 250px;
             font-size: 16px;
+            font-family: "Segoe UI", "Arial", "Microsoft Sans Serif";
+        }
+        QComboBox:hover {
+            border: 1px solid #1976d2;
+        }
+        QComboBox QAbstractItemView {
+            background-color: white;
+            selection-background-color: #e3f2fd;
+            selection-color: black;
+            font-family: "Segoe UI", "Arial", "Microsoft Sans Serif";
+            font-size: 16px;
+        }
+        QComboBox QAbstractItemView::item:hover {
+            background-color: #e3f2fd;
+            color: black;
         }
         """
 
