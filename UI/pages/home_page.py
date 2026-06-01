@@ -13,7 +13,7 @@ class HomePage(QWidget):
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignCenter)
 
-        welcome = QLabel("CHÀO MỪNG ĐẾN VỚI NGÂN HÀNG ABC")
+        welcome = QLabel("CHÀO MỪNG ĐẾN VỚI NGÂN HÀNG DBC")
         welcome.setFont(QFont("Arial", 22, QFont.Bold))
         welcome.setStyleSheet("color: #1a237e;")
         welcome.setAlignment(Qt.AlignCenter)
