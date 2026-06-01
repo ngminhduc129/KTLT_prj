@@ -195,6 +195,13 @@ class BankService:
         )
 
     def load_all_data(self):
+        import os
+        data_files = ['data/users.txt', 'data/accounts.txt', 'data/transactions.txt', 'data/savings.txt']
+        for f in data_files:
+            if not os.path.exists(f):
+                os.makedirs(os.path.dirname(f), exist_ok=True)
+                open(f, 'a', encoding='utf-8').close()
+
         user_repo = User_repository()
         users = user_repo.load_data()
         while users.head is not None:
@@ -235,43 +242,3 @@ class BankService:
                 transaction
             )
             current = current.next
-
-        self._seed_data()
-
-    def _seed_data(self):
-        if self.user_service.user_storage.size > 0:
-            return
-
-        user1 = self.user_service.create_user(
-            "1", "Nguyen Van A", "0912345678", "vana@gmail.com",
-            "Nam", "Ha Noi", "Ky su", "01/01/1990"
-        )
-        user2 = self.user_service.create_user(
-            "2", "Tran Thi B", "0987654321", "thib@gmail.com",
-            "Nu", "TP HCM", "Bac si", "15/05/1995"
-        )
-
-        acc1 = self.account_service.create_account(
-            "AC100000", "Minhduc_129", "1", "129", "Ha Noi"
-        )
-        acc2 = self.account_service.create_account(
-            "AC200000", "Thib_456", "2", "456", "TP HCM"
-        )
-
-        acc1.balance = 5000000.0
-        acc2.balance = 3000000.0
-
-        self.transaction_service.add_transaction(
-            None, "AC100000", "Deposit", 5000000.0,
-            "Deposit money into AC100000", 5000000.0
-        )
-        self.transaction_service.add_transaction(
-            None, "AC200000", "Deposit", 3000000.0,
-            "Deposit money into AC200000", 3000000.0
-        )
-
-        from datetime import datetime
-        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        self.saving_service.create_saving("STK100000", "AC100000", 2000000.0, now)
-
-        self.save_all_data()

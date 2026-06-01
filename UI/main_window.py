@@ -11,6 +11,7 @@ from Services.bank_service import BankService
 
 from UI.pages.home_page import HomePage
 from UI.pages.customer_page import CustomerPage
+from UI.pages.account_page import AccountPage
 from UI.pages.deposit_page import DepositPage
 from UI.pages.withdraw_page import WithdrawPage
 from UI.pages.transfer_page import TransferPage
@@ -20,7 +21,7 @@ from UI.pages.close_saving_page import CloseSavingPage
 from UI.pages.history_page import HistoryPage
 from UI.pages.find_page import FindPage
 from UI.pages.update_information_page import UpdateInformationPage
-
+from UI.pages.change_pin_password_page import ChangeSecurityPage
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -52,22 +53,32 @@ class MainWindow(QMainWindow):
         body_layout.setSpacing(0)
 
         menu_labels = [
-            "Trang chủ", "Tạo khách hàng + Tài khoản", "Nạp tiền",
-            "Rút tiền", "Chuyển khoản", "Sổ tiết kiệm",
+            "Trang chủ", "Tạo khách hàng + Tài khoản", "Thêm tài khoản",
+            "Nạp tiền", "Rút tiền", "Chuyển khoản", "Sổ tiết kiệm",
             "Rút lãi tiết kiệm", "Tất toán sổ tiết kiệm",
             "Lịch sử giao dịch", "Tra cứu", "Cập nhật thông tin", "Đổi mật khẩu và mã PIN"
         ]
         page_wrappers = ["Tổng quan", "Tạo khách hàng & Tài khoản",
+            "Thêm tài khoản cho khách hàng",
             "Nạp tiền vào tài khoản", "Rút tiền từ tài khoản",
             "Chuyển khoản", "Tạo sổ tiết kiệm", "Rút lãi tiết kiệm",
             "Tất toán sổ tiết kiệm", "Lịch sử giao dịch", "Tra cứu thông tin", 
             "Cập nhật thông tin khách hàng", "Đổi mật khẩu và mã PIN"]
 
         pages = [
-            HomePage(self), CustomerPage(self), DepositPage(self),
-            WithdrawPage(self), TransferPage(self), SavingPage(self),
-            InterestPage(self), CloseSavingPage(self), HistoryPage(self),
-            FindPage(self), UpdateInformationPage(self)
+            HomePage(self),
+            CustomerPage(self),
+            AccountPage(self),
+            DepositPage(self),
+            WithdrawPage(self),
+            TransferPage(self),
+            SavingPage(self),
+            InterestPage(self),
+            CloseSavingPage(self),
+            HistoryPage(self),
+            FindPage(self),
+            UpdateInformationPage(self),
+            ChangeSecurityPage(self)
         ]
 
         self.menu = QListWidget()
