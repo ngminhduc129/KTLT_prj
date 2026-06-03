@@ -101,13 +101,13 @@ class UserService:
     def get_all_users(self):
         return self.user_storage.values()
     
-    # def validate_email(email):
-    #     if not email:
-    #         raise ValueError("Email cannot be empty.")
+    def validate_email(self, email):
+        if not email:
+            raise ValueError("Email cannot be empty.")
 
-    #     email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         
-    #     if not re.fullmatch(email_regex, email):
-    #         raise ValueError("Invalid email format.")
+        if not re.fullmatch(email_regex, email):
+            raise ValueError("Invalid email format.")
             
-    #     return True
+        return True

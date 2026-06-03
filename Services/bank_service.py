@@ -29,8 +29,7 @@ class BankService:
         if len(phone) != 10:
             raise ValueError("Phone must have 10 numbers.")
         
-        # if not self.user_service.validate_email(email):
-        #     raise ValueError("Invalid email format.")
+        self.user_service.validate_email(email)
 
         special_chars = "!@#$%^&*()-_=+[]{}|;:',.<>?/"
         if not password:
@@ -56,7 +55,28 @@ class BankService:
         return user, account
 
     def create_account(self, user_id, password, pin, branch):
-        pass
+
+        self.user_service.find_user_by_id(user_id)
+
+        special_chars = "!@#$%^&*()-_=+[]{}|;:',.<>?/"
+        if not password:
+            raise ValueError("Password is empty.")
+        if not password[0].isupper():
+            raise ValueError("Password must have the first uppercase letter.")
+        if not any(c.isdigit() for c in password):
+            raise ValueError("Password must contain at least one number.")
+        if not any(c in special_chars for c in password):
+            raise ValueError("Password must contain at least one special character.")
+
+        if not pin or not pin.isdigit():
+            raise ValueError("PIN must be all numbers.")       
+
+
+        account_id = self.account_service.generate_account_id()
+        account = self.account_service.create_account(
+            account_id, password, user_id, pin, branch
+        )
+        return account
 
     def deposit_money(self, account_id, amount, pin):
         if amount <= 0:
@@ -170,13 +190,18 @@ class BankService:
             self.saving_service.get_all_savings()
         )
 
-        transactions = self.transaction_service.get_all_transactions()
-        current = transactions.head
-        while current is not None:
-            Transaction_repository().append_data(current.value)
-            current = current.next
+        Transaction_repository().save_data(
+            self.transaction_service.get_all_transactions()
+        )
 
     def load_all_data(self):
+        import os
+        data_files = ['data/users.txt', 'data/accounts.txt', 'data/transactions.txt', 'data/savings.txt']
+        for f in data_files:
+            if not os.path.exists(f):
+                os.makedirs(os.path.dirname(f), exist_ok=True)
+                open(f, 'a', encoding='utf-8').close()
+
         user_repo = User_repository()
         users = user_repo.load_data()
         while users.head is not None:

@@ -13,7 +13,7 @@ class HomePage(QWidget):
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignCenter)
 
-        welcome = QLabel("CHÀO MỪNG ĐẾN VỚI NGÂN HÀNG ABC")
+        welcome = QLabel("CHÀO MỪNG ĐẾN VỚI NGÂN HÀNG DBC")
         welcome.setFont(QFont("Arial", 22, QFont.Bold))
         welcome.setStyleSheet("color: #1a237e;")
         welcome.setAlignment(Qt.AlignCenter)
@@ -36,6 +36,8 @@ class HomePage(QWidget):
             "Sổ tiết kiệm (Saving Deposit)",
             "Lịch sử giao dịch",
             "Tra cứu tài khoản",
+            "Cập nhật thông tin",
+            "Đổi mật khẩu và mã PIN"
         ]
         for f in features:
             lbl = QLabel(f"  {f}")
