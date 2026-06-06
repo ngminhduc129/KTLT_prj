@@ -43,6 +43,13 @@ class BankService:
 
         if not pin or not pin.isdigit():
             raise ValueError("PIN must be all numbers.")
+        
+        count = 0
+        for c in pin:
+            count += 1
+        
+        if count != 6:
+            raise ValueError("PIN must have 6 enough numbers.")
 
         user = self.user_service.create_user(
             user_id, full_name, phone, email, sex, address, job, dob

@@ -65,6 +65,7 @@ class WithdrawPage(QWidget):
                    f"Số dư mới: {account.balance:,.0f} VND\n"
                    f"Mã GD: {trans.trans_id}")
             mw._show_success(msg)
+            mw.bank.save_all_data()
             self._clear()
         except ValueError as e:
             mw._show_error(str(e))

@@ -76,6 +76,7 @@ class TransferPage(QWidget):
                    f"TK nguồn ({src}): {src_acc.balance:,.0f} VND\n"
                    f"TK đích ({dst}): {dst_acc.balance:,.0f} VND")
             mw._show_success(msg)
+            mw.bank.save_all_data()
             self._clear()
         except ValueError as e:
             mw._show_error(str(e))
