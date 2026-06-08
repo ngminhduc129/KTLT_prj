@@ -1,7 +1,6 @@
 from Structures.Hash_table import Hash_table
 from Models.account import Account
 from Structures.Linked_list import LinkedList
-from typing import Tuple
 
 class AccountService:
     """
@@ -122,12 +121,12 @@ class AccountService:
     
 
     def transfer(self, source_account_id: str, target_account_id: str, 
-                 amount: float, pin: str, password: str) -> Tuple[Account, Account]: 
+                 amount: float, pin: str, password: str) -> LinkedList: 
         '''
         Transfer money from source account to target account.
         
         Returns:
-            tuple: (source_account, target_account) after transfer success
+           linked list after transfer success
         '''
 
         if amount <= 0:
@@ -159,7 +158,11 @@ class AccountService:
         source.balance -= amount
         target.balance += amount
 
-        return source, target
+        result = LinkedList()
+        result.append(source.account_id, source)
+        result.append(target.account_id, target)
+
+        return result
     
     def find_account(self, account_id: str) -> Account:
         """
