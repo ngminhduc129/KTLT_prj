@@ -80,5 +80,6 @@ class InterestPage(QWidget):
                    f"Đã chuyển vào TK: {account_id}\n"
                    f"Số dư mới: {account.balance:,.0f} VND")
             mw._show_success(msg)
+            mw.bank.save_all_data()
         except ValueError as e:
             mw._show_error(str(e))

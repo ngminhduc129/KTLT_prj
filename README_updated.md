@@ -10,27 +10,24 @@ Dự án **tự cài đặt** các cấu trúc dữ liệu/thuật toán cơ b�
 - `Structures/`: cấu trúc dữ liệu tự cài đặt (Node, Linked_list, Hash_table...)
 - `Services/`: xử lý nghiệp vụ (UserService, AccountService, TransactionService, SavingService, BankService...)
 - `Persistence/`: cơ chế đọc/ghi file text (repositories, File_handler...)
-- `UI/`: giao diện người dùng (PyQt5) thông qua `MainWindow` và các trang trong `UI/pages/`
+- `UI/`: giao diện người dùng (PyQt) qua `MainWindow` và các trang trong `UI/pages/`
 
 ## Tính năng chính
 - Quản lý khách hàng (thêm/xem/cập nhật/tìm kiếm)
 - Quản lý tài khoản (tạo tài khoản, đăng nhập, xác thực PIN, khóa/mở khóa, đổi PIN)
 - Giao dịch ngân hàng (nạp tiền, rút tiền, chuyển khoản nội bộ)
 - Tính lãi suất sổ tiết kiệm
-- Xem lịch sử giao dịch & sao kê
+- Xem lịch sử & sao kê theo giao dịch
 
-## Chạy chương trình
+## Cách chạy
+1. Cài dependencies (nếu chưa có):
+   - PyQt5
+2. Chạy ứng dụng:
+   ```bash
+   python main.py
+   ```
 
-### Cài đặt
-- Python 3.x
-- PyQt5
-
-### Khởi chạy
-```bash
-python main.py
-```
-
-## Cấu trúc thư mục quan trọng
+## Cấu trúc file quan trọng
 ```text
 KTLT_prj/
 ├── main.py
@@ -60,11 +57,14 @@ KTLT_prj/
 ├── UI/
 │   ├── main_window.py
 │   └── pages/
-├── data/
+│       ├── home_page.py
+│       ├── account_page.py
+│       └── ...
+├── data/   (dữ liệu file, tùy cấu hình dự án)
 └── project_review_report.md
 ```
 
 ## Ghi chú
-- Dữ liệu có thể được lưu/đọc thông qua lớp trong `Persistence/`.
+- Dữ liệu có thể được lưu/đọc qua lớp `Persistence/`.
 - Giao diện hiện tại dùng PyQt5.
 

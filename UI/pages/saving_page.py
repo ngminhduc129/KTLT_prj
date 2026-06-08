@@ -71,6 +71,7 @@ class SavingPage(QWidget):
                    f"Ngày phát hành: {saving.start_date}")
             mw.sav_result.setText(msg)
             mw._show_success("Tạo sổ tiết kiệm thành công!")
+            mw.bank.save_all_data()
         except ValueError as e:
             mw._show_error(str(e))
         except TypeError as e:
