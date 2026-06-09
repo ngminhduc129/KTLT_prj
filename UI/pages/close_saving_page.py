@@ -123,7 +123,6 @@ class CloseSavingPage(QWidget):
         self.mw.cls_saving_id.clear()
         self.mw.cls_password.clear()
         self.mw.cls_pin.clear()
-        # 🌟 ĐÃ FIX: QLabel sử dụng .setText để loại bỏ nguy cơ sập ứng dụng của hàm .clear() cũ
         self.mw.cls_info.setText("Chưa thực hiện kiểm tra")
 
     def _on_check(self):
