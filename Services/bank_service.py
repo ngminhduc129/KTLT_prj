@@ -116,9 +116,14 @@ class BankService:
     def transfer_money(self, src_account, dst_account, amount, pin, password):
         if amount <= 0:
             raise ValueError("Amount must be greater than 0.")
-        src_acc, dst_acc = self.account_service.transfer(
+
+        result = self.account_service.transfer(
             src_account, dst_account, amount, pin, password
         )
+
+        src_acc = result.head.value
+        dst_acc = result.head.next.value
+
         self.transaction_service.add_transaction(
             from_account=src_account,
             to_account=dst_account,
