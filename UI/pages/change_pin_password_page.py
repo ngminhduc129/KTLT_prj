@@ -1,181 +1,148 @@
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QFormLayout,
-    QLineEdit, QPushButton,
-    QHBoxLayout, QComboBox,
-    QStackedWidget
+    QWidget, QVBoxLayout, QFormLayout, QLineEdit, QComboBox,
+    QPushButton, QHBoxLayout, QLabel, QFrame, QStackedWidget
 )
+from PyQt5.QtCore import Qt
 
 
 class ChangeSecurityPage(QWidget):
-
     def __init__(self, mw):
         super().__init__()
         self.mw = mw
         self._build()
+        self._apply_styles()
 
+    # ──────────────────────────────────────────────
+    #  BUILD UI
+    # ──────────────────────────────────────────────
     def _build(self):
-
+        # 1. Layout gốc quản lý toàn trang
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 16)
+        layout.setSpacing(14)
 
-        # =================================================
-        # FORM
-        # =================================================
-        form_w = QWidget()
+        # 2. Khung Panel chính bao bọc toàn bộ form dữ liệu bảo mật
+        form_frame = QFrame()
+        form_frame.setObjectName("formPanel")
+        
+        f_layout = QFormLayout(form_frame)
+        f_layout.setContentsMargins(20, 18, 20, 18)
+        f_layout.setSpacing(12)
+        f_layout.setLabelAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
-        f_layout = QFormLayout(form_w)
-        f_layout.setSpacing(10)
-
-        # USER ID
+        # ── HÀNG 1: USER ID ───────────────────────────────
+        lbl_uid = QLabel("User ID: *")
+        lbl_uid.setObjectName("formLabel")
         self.user_id_input = QLineEdit()
+        self.user_id_input.setObjectName("formInput")
+        self.user_id_input.setPlaceholderText("Nhập User ID để tra cứu tài khoản...")
+        self.user_id_input.setFixedHeight(36)
+        f_layout.addRow(lbl_uid, self.user_id_input)
 
-        # ACCOUNT BOX
+        # ── HÀNG 2: TÀI KHOẢN + NÚT TÌM KIẾM ─────────────────
+        lbl_acc = QLabel("Tài khoản: *")
+        lbl_acc.setObjectName("formLabel")
+        
         self.account_box = QComboBox()
+        self.account_box.setObjectName("formInput")
+        self.account_box.setFixedHeight(36)
+        self.account_box.setPlaceholderText("Bấm 'Tìm tài khoản' để chọn...")
 
-        btn_find = QPushButton(
-            "Tìm tài khoản"
-        )
-
-        btn_find.setObjectName(
-            "btnNormal"
-        )
-
-        btn_find.clicked.connect(
-            self._load_accounts
-        )
+        btn_find = QPushButton("Tìm tài khoản")
+        btn_find.setObjectName("btnNormal")
+        btn_find.setFixedHeight(36)
+        btn_find.clicked.connect(self._load_accounts)
 
         account_row = QHBoxLayout()
+        account_row.setSpacing(8)
+        account_row.addWidget(self.account_box, 1)
+        account_row.addWidget(btn_find)
+        f_layout.addRow(lbl_acc, account_row)
 
-        account_row.addWidget(
-            self.account_box
-        )
-
-        account_row.addWidget(
-            btn_find
-        )
-
-        # ACTION
+        # ── HÀNG 3: LỰA CHỌN CHỨC NĂNG ─────────────────────
+        lbl_act = QLabel("Chức năng: *")
+        lbl_act.setObjectName("formLabel")
+        
         self.action_box = QComboBox()
+        self.action_box.setObjectName("formInput")
+        self.action_box.setFixedHeight(36)
+        self.action_box.addItems(["Đổi mật khẩu", "Đổi mã PIN"])
+        self.action_box.currentIndexChanged.connect(self._switch_form)
+        f_layout.addRow(lbl_act, self.action_box)
 
-        self.action_box.addItems([
-            "Đổi mật khẩu",
-            "Đổi mã PIN"
-        ])
+        # Thanh phân tách mảnh trước khi chuyển sang vùng nội dung động (Stack)
+        sep_stack = QFrame()
+        sep_stack.setFrameShape(QFrame.HLine)
+        sep_stack.setObjectName("formSep")
+        f_layout.addRow(sep_stack)
 
-        self.action_box.currentIndexChanged.connect(
-            self._switch_form
-        )
-
-        # FORM LAYOUT
-        f_layout.addRow(
-            "Mã khách hàng (CCCD):",
-            self.user_id_input
-        )
-
-        f_layout.addRow(
-            "Tài khoản:",
-            account_row
-        )
-
-        f_layout.addRow(
-            "Chức năng:",
-            self.action_box
-        )
-
-        # =================================================
-        # STACK
-        # =================================================
+        # ── KHU VỰC TRÁO ĐỔI FORM ĐỘNG (QStackedWidget) ──────
         self.stack = QStackedWidget()
+        self.stack.setObjectName("innerStack")
 
         # -------------------------------------------------
-        # PASSWORD PAGE
+        # PAGE ĐỔI MẬT KHẨU
         # -------------------------------------------------
         password_page = QWidget()
+        password_layout = QFormLayout(password_page)
+        password_layout.setContentsMargins(0, 0, 0, 0) # Triệt tiêu margin thừa của stack con
+        password_layout.setSpacing(12)
+        password_layout.setLabelAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
-        password_layout = QFormLayout(
-            password_page
-        )
-
+        lbl_new_pwd = QLabel("Mật khẩu mới: *")
+        lbl_new_pwd.setObjectName("formLabel")
         self.new_password_input = QLineEdit()
-
-        self.new_password_input.setEchoMode(
-            QLineEdit.Password
-        )
-
-        password_layout.addRow(
-            "Mật khẩu mới:",
-            self.new_password_input
-        )
+        self.new_password_input.setObjectName("formInput")
+        self.new_password_input.setEchoMode(QLineEdit.Password)
+        self.new_password_input.setFixedHeight(36)
+        password_layout.addRow(lbl_new_pwd, self.new_password_input)
 
         # -------------------------------------------------
-        # PIN PAGE
+        # PAGE ĐỔI MÃ PIN
         # -------------------------------------------------
         pin_page = QWidget()
-
         pin_layout = QFormLayout(pin_page)
+        pin_layout.setContentsMargins(0, 0, 0, 0) # Triệt tiêu margin thừa của stack con
+        pin_layout.setSpacing(12)
+        pin_layout.setLabelAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
+        lbl_new_pin = QLabel("Mã PIN mới: *")
+        lbl_new_pin.setObjectName("formLabel")
         self.new_pin_input = QLineEdit()
-
-        self.new_pin_input.setEchoMode(
-            QLineEdit.Password
-        )
-
+        self.new_pin_input.setObjectName("formInput")
+        self.new_pin_input.setEchoMode(QLineEdit.Password)
         self.new_pin_input.setMaxLength(6)
+        self.new_pin_input.setFixedHeight(36)
+        self.new_pin_input.setPlaceholderText("Tối đa 6 số")
+        pin_layout.addRow(lbl_new_pin, self.new_pin_input)
 
-        pin_layout.addRow(
-            "PIN mới:",
-            self.new_pin_input
-        )
-
-        # ADD STACK
+        # Add các page động vào Stack điều hướng
         self.stack.addWidget(password_page)
         self.stack.addWidget(pin_page)
+        
+        # Thêm nguyên khối Stack thành một hàng trong QFormLayout cha
+        f_layout.addRow(self.stack)
 
-        # =================================================
-        # BUTTONS
-        # =================================================
+        # Nạp toàn bộ Panel Form đã đóng gói vào layout chính của trang
+        layout.addWidget(form_frame)
+
+        # ── DÒNG NÚT BẤM HÀNH ĐỘNG ĐÁY TRANG ──────────────
         btn_row = QHBoxLayout()
+        btn_row.setSpacing(8)
 
-        btn_update = QPushButton(
-            "Cập nhật"
-        )
+        btn_update = QPushButton("Cập nhật")
+        btn_update.setObjectName("btnPrimary")
+        btn_update.setFixedHeight(38)
+        btn_update.clicked.connect(self._on_update)
 
-        btn_update.setObjectName(
-            "btnPrimary"
-        )
-
-        btn_update.clicked.connect(
-            self._on_update
-        )
-
-        btn_clear = QPushButton(
-            "Làm mới"
-        )
-
-        btn_clear.setObjectName(
-            "btnNormal"
-        )
-
-        btn_clear.clicked.connect(
-            self._clear
-        )
+        btn_clear = QPushButton("Làm mới")
+        btn_clear.setObjectName("btnNormal")
+        btn_clear.setFixedHeight(38)
+        btn_clear.clicked.connect(self._clear)
 
         btn_row.addStretch()
-
-        btn_row.addWidget(
-            btn_update
-        )
-
-        btn_row.addWidget(
-            btn_clear
-        )
-
-        # =================================================
-        # MAIN LAYOUT
-        # =================================================
-        layout.addWidget(form_w)
-
-        layout.addWidget(self.stack)
-
+        btn_row.addWidget(btn_clear)
+        btn_row.addWidget(btn_update)
         layout.addLayout(btn_row)
 
         layout.addStretch()
@@ -258,7 +225,7 @@ class ChangeSecurityPage(QWidget):
     # UPDATE
     # =====================================================
     def _on_update(self):
-
+        mw = self.mw
         account_id = (
             self.account_box.currentText().strip()
         )
@@ -293,37 +260,7 @@ class ChangeSecurityPage(QWidget):
                     .strip()
                 )
 
-                special_chars = (
-                    "!@#$%^&*()-_=+[]{}|;:',.<>?/"
-                )
-
-                if len(new_password) < 8:
-                    raise ValueError(
-                        "Password must be at least 8 characters."
-                    )
-
-                if not new_password[0].isupper():
-                    raise ValueError(
-                        "Password must start with uppercase letter."
-                    )
-
-                if not any(
-                    c.isdigit()
-                    for c in new_password
-                ):
-                    raise ValueError(
-                        "Password must contain at least one number."
-                    )
-
-                if not any(
-                    c in special_chars
-                    for c in new_password
-                ):
-                    raise ValueError(
-                        "Password must contain at least one special character."
-                    )
-
-                account.password = new_password
+                account = mw.bank.account_service.change_password(account.account_id, new_password)
 
                 self.mw._show_success(
                     "Đổi mật khẩu thành công!"
@@ -340,17 +277,7 @@ class ChangeSecurityPage(QWidget):
                     .strip()
                 )
 
-                if not new_pin.isdigit():
-                    raise ValueError(
-                        "PIN must contain only numbers."
-                    )
-
-                if len(new_pin) != 6:
-                    raise ValueError(
-                        "PIN must be exactly 6 digits."
-                    )
-
-                account.pin = new_pin
+                account = self.mw.bank.account_service.change_pin(account.account_id, new_pin)
 
                 self.mw._show_success(
                     "Đổi mã PIN thành công!"
@@ -364,3 +291,80 @@ class ChangeSecurityPage(QWidget):
         except Exception as e:
 
             self.mw._show_error(str(e))
+
+    def _apply_styles(self):
+        self.setStyleSheet("""
+            /* ── Panel Form bao bọc ── */
+            QFrame#formPanel {
+                background: #f8f9ff;
+                border: 1px solid #c5cae9;
+                border-radius: 10px;
+            }
+            QLabel#formLabel {
+                font-size: 13px;
+                font-weight: 600;
+                color: #37474f;
+                min-width: 100px;
+            }
+            QFrame#formSep {
+                color: #dde1f5;
+                margin: 4px 0;
+            }
+            QStackedWidget#innerStack {
+                background: transparent;
+                border: none;
+            }
+
+            /* ── Inputs (LineEdit & ComboBox) ── */
+            QLineEdit#formInput, QComboBox#formInput {
+                border: 1.5px solid #c5cae9;
+                border-radius: 6px;
+                padding: 4px 10px;
+                font-size: 13px;
+                background: white;
+                color: #263238;
+            }
+            QLineEdit#formInput:focus, QComboBox#formInput:focus {
+                border-color: #3f51b5;
+                background: #fafbff;
+            }
+            
+            /* Cấu hình thêm cho ComboBox */
+            QComboBox#formInput::drop-down {
+                border: none;
+                padding-right: 10px;
+            }
+            QComboBox#formInput::down-arrow {
+                image: none;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 5px solid #7986cb;
+                width: 0;
+                height: 0;
+            }
+
+            /* ── Nút cập nhật chính ── */
+            QPushButton#btnPrimary {
+                background: #3f51b5;
+                color: white;
+                border: none;
+                border-radius: 7px;
+                padding: 0 24px;
+                font-size: 13px;
+                font-weight: 600;
+            }
+            QPushButton#btnPrimary:hover  { background: #303f9f; }
+            QPushButton#btnPrimary:pressed{ background: #283593; }
+
+            /* ── Nút phụ (Tra cứu, Làm mới) ── */
+            QPushButton#btnNormal {
+                background: #eceff1;
+                color: #37474f;
+                border: 1px solid #cfd8dc;
+                border-radius: 7px;
+                padding: 0 20px;
+                font-size: 13px;
+                font-weight: 500;
+            }
+            QPushButton#btnNormal:hover { background: #e0e0e0; }
+        """)

@@ -206,9 +206,9 @@ class AccountService:
     def get_all_accounts(self):
         return self.account_storage.values()
 
-    def change_pin(self, account_id: str, password: str, old_pin: str, new_pin: str) -> Account:
+    def change_pin(self, account_id: str, new_pin: str) -> Account:
         '''
-        Change pin require account id , password, old pin, new pin
+        Change pin require account id
         Return : Account
         '''
 
@@ -217,17 +217,39 @@ class AccountService:
         if account is None:
             raise ValueError(f"Account {account_id} does not exist")
         
-        if account.password != password:
-            raise ValueError("Invalid password")
+        if not new_pin.isdigit():
+            raise ValueError(
+                "PIN must contain only numbers."
+            )
         
-        if account.pin != old_pin:
-            raise ValueError("Invalid pin")
-
+        if len(new_pin) != 6:
+            raise ValueError(
+                "PIN must be exactly 6 digits."
+            )
+        
         account.pin = new_pin
 
         return account
 
+    def change_password(self, account_id: str, new_password: str) -> Account:
+        account = self.find_account(account_id)
 
+        if account is None:
+            raise ValueError(f"Account {account_id} does not exist")
+        
+        special_chars = "!@#$%^&*()-_=+[]{}|;:',.<>?/"
+        if not new_password:
+            raise ValueError("Password is empty.")
+        if not new_password[0].isupper():
+            raise ValueError("Password must have the first uppercase letter.")
+        if not any(c.isdigit() for c in new_password):
+            raise ValueError("Password must contain at least one number.")
+        if not any(c in special_chars for c in new_password):
+            raise ValueError("Password must contain at least one special character.")
+
+        account.password = new_password
+        return account
+    
     def unlock_account(self, account_id: str, password: str, pin: str) -> Account:
         '''
         Unlock account require account id , password, pin

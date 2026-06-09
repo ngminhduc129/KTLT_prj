@@ -55,14 +55,22 @@ class SavingService:
     
     def get_months_passed(self, start_date):
         # Calculate the number of months between start_date and maturity_date and convert to int
-        start = datetime.strptime(start_date, "%d/%m/%Y %H:%M:%S")
-        maturity = datetime.now()
+        # Check if start_date is None or str None because of DB
+        if start_date is None or str(start_date).strip() == 'None' or not start_date:
+            return 0
         
+        try: 
+            start = datetime.strptime(str(start_date), "%d/%m/%Y %H:%M:%S")
+        except ValueError:
+            return 0
+        
+        maturity = datetime.now()
+            
         months = (maturity.year - start.year) * 12 + (maturity.month - start.month) 
         if maturity.day < start.day:
             months -= 1
 
-        return months
+        return max(0, months)
 
     def calculate_interest(self, saving_id):
         # Find your saving deposit
@@ -71,10 +79,14 @@ class SavingService:
             raise ValueError(f"Saving account {saving_id} does not exits")
 
         # calculating the number of months that users deposit savings
-        if saving.maturity_date is None:
+        if saving.maturity_date is None or str(saving.maturity_date).strip() == 'None':
             final_settlement_date = saving.start_date
         else:
             final_settlement_date = saving.maturity_date
+
+        if final_settlement_date is None or str(final_settlement_date).strip() == 'None':
+            final_settlement_date = datetime.now().strftime("%d/%m/%y %H:%M:%S")
+
         months = self.get_months_passed(final_settlement_date)
         amount = saving.amount
 

@@ -1,9 +1,10 @@
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QListWidget, QStackedWidget, QLabel,
+    QTreeWidget, QTreeWidgetItem, QStackedWidget, QLabel,
     QMessageBox, QHeaderView, QFrame,
     QAbstractItemView
 )
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
@@ -19,7 +20,8 @@ from UI.pages.saving_page import SavingPage
 from UI.pages.interest_page import InterestPage
 from UI.pages.close_saving_page import CloseSavingPage
 from UI.pages.history_page import HistoryPage
-from UI.pages.find_page import FindPage
+from UI.pages.find_account_page import FindPageAccount
+from UI.pages.find_user_page import FindPageUser
 from UI.pages.update_information_page import UpdateInformationPage
 from UI.pages.change_pin_password_page import ChangeSecurityPage
 class MainWindow(QMainWindow):
@@ -52,17 +54,12 @@ class MainWindow(QMainWindow):
         body_layout.setContentsMargins(0, 0, 0, 0)
         body_layout.setSpacing(0)
 
-        menu_labels = [
-            "Trang chủ", "Tạo khách hàng + Tài khoản", "Thêm tài khoản",
-            "Nạp tiền", "Rút tiền", "Chuyển khoản", "Sổ tiết kiệm",
-            "Rút lãi tiết kiệm", "Tất toán sổ tiết kiệm",
-            "Lịch sử giao dịch", "Tra cứu", "Cập nhật thông tin", "Đổi mật khẩu và mã PIN"
-        ]
+
         page_wrappers = ["Tổng quan", "Tạo khách hàng & Tài khoản",
             "Thêm tài khoản cho khách hàng",
             "Nạp tiền vào tài khoản", "Rút tiền từ tài khoản",
             "Chuyển khoản", "Tạo sổ tiết kiệm", "Rút lãi tiết kiệm",
-            "Tất toán sổ tiết kiệm", "Lịch sử giao dịch", "Tra cứu thông tin", 
+            "Tất toán sổ tiết kiệm", "Lịch sử giao dịch", "Tra cứu thông tin khách hàng", "Tra cứu tài khoản ngân hàng" 
             "Cập nhật thông tin khách hàng", "Đổi mật khẩu và mã PIN"]
 
         pages = [
@@ -76,32 +73,104 @@ class MainWindow(QMainWindow):
             InterestPage(self),
             CloseSavingPage(self),
             HistoryPage(self),
-            FindPage(self),
+            FindPageUser(self),
+            FindPageAccount(self),
             UpdateInformationPage(self),
             ChangeSecurityPage(self)
         ]
 
-        self.menu = QListWidget()
+        self.menu = QTreeWidget()
         self.menu.setObjectName("menuNav")
         self.menu.setFixedWidth(300)
         self.menu.setFocusPolicy(Qt.NoFocus)
-        for text in menu_labels:
-            self.menu.addItem(text)
+        self.menu.setHeaderHidden(True)
+
+        # Mapping trang (leaf) -> index QStackedWidget (không dựa row index)
+        self._leaf_to_page_index = {
+            "Trang chủ": 0,
+            "Tạo khách hàng + Tài khoản": 1,
+            "Thêm tài khoản": 2,
+            "Nạp tiền": 3,
+            "Rút tiền": 4,
+            "Chuyển khoản": 5,
+            "Sổ tiết kiệm": 6,
+            "Rút lãi tiết kiệm": 7,
+            "Tất toán sổ tiết kiệm": 8,
+            "Lịch sử giao dịch": 9,
+            "Tra cứu thông tin khách hàng": 10,
+            "Tra cứu tài khoản ngân hàng": 11,
+            "Cập nhật thông tin": 12,
+            "Đổi mật khẩu và mã PIN": 13,
+        }
+
+        # Node cha/con theo nhóm nghiệp vụ
+        root_home = QTreeWidgetItem(self.menu, ["Trang chủ"])
+
+        root_customer = QTreeWidgetItem(self.menu, ["Khách hàng"])
+        QTreeWidgetItem(root_customer, ["Tạo khách hàng + Tài khoản"])
+        QTreeWidgetItem(root_customer, ["Tra cứu thông tin khách hàng"])
+        QTreeWidgetItem(root_customer, ["Cập nhật thông tin"])
+
+        root_account = QTreeWidgetItem(self.menu, ["Tài khoản"])
+
+        QTreeWidgetItem(root_account, ["Thêm tài khoản"])
+        QTreeWidgetItem(root_account, ["Đổi mật khẩu và mã PIN"])
+        QTreeWidgetItem(root_account, ["Tra cứu tài khoản ngân hàng"])
+
+        root_transaction = QTreeWidgetItem(self.menu, ["Giao dịch"])
+        QTreeWidgetItem(root_transaction, ["Nạp tiền"])
+        QTreeWidgetItem(root_transaction, ["Rút tiền"])
+        QTreeWidgetItem(root_transaction, ["Chuyển khoản"])
+        QTreeWidgetItem(root_transaction, ["Lịch sử giao dịch"])
+
+        root_saving = QTreeWidgetItem(self.menu, ["Sổ tiết kiệm"])
+        QTreeWidgetItem(root_saving, ["Sổ tiết kiệm"])
+        QTreeWidgetItem(root_saving, ["Rút lãi tiết kiệm"])
+        QTreeWidgetItem(root_saving, ["Tất toán sổ tiết kiệm"])
+
         body_layout.addWidget(self.menu)
 
+        pages_config = [
+                    ("Tổng quan", HomePage(self)),
+                    ("Tạo khách hàng & Tài khoản", CustomerPage(self)),
+                    ("Thêm tài khoản cho khách hàng", AccountPage(self)),
+                    ("Nạp tiền vào tài khoản", DepositPage(self)),
+                    ("Rút tiền từ tài khoản", WithdrawPage(self)),
+                    ("Chuyển khoản", TransferPage(self)),
+                    ("Tạo sổ tiết kiệm", SavingPage(self)),
+                    ("Rút lãi tiết kiệm", InterestPage(self)),
+                    ("Tất toán sổ tiết kiệm", CloseSavingPage(self)),
+                    ("Lịch sử giao dịch", HistoryPage(self)),
+                    ("Tra cứu thông tin khách hàng", FindPageUser(self)),
+                    ("Tra cứu tài khoản ngân hàng", FindPageAccount(self)),
+                    ("Cập nhật thông tin khách hàng", UpdateInformationPage(self)),
+                    ("Đổi mật khẩu và mã PIN", ChangeSecurityPage(self))
+        ]
         self.pages = QStackedWidget()
         self.pages.setObjectName("contentArea")
         self.page_map = []
-        for i, page in enumerate(pages):
-            wrapped = self._wrap_page(page_wrappers[i], page)
+
+
+        for title, page_obj in pages_config:
+            wrapped = self._wrap_page(title, page_obj)
             self.pages.addWidget(wrapped)
             self.page_map.append(wrapped)
 
         body_layout.addWidget(self.pages, 1)
         main_layout.addWidget(body, 1)
 
-        self.menu.currentRowChanged.connect(self.pages.setCurrentIndex)
-        self.menu.setCurrentRow(0)
+        # Kết nối menu QTreeWidget (chỉ map các leaf item)
+        def on_item_clicked(item: QTreeWidgetItem, column: int):
+            text = item.text(0).strip()
+            if text in self._leaf_to_page_index:
+                self.pages.setCurrentIndex(self._leaf_to_page_index[text])
+
+        self.menu.itemClicked.connect(on_item_clicked)
+
+        # Mặc định hiển thị trang 0
+        self.pages.setCurrentIndex(0)
+
+
 
     def _create_header(self):
         header = QFrame()

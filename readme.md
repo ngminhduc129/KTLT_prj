@@ -65,6 +65,7 @@ KTLT_prj/
 ```
 
 ## Ghi chú
-- Dữ liệu có thể được lưu/đọc thông qua lớp trong `Persistence/`.
-- Giao diện hiện tại dùng PyQt5.
+- Ứng dụng dùng PyQt5 (GUI).
+- Dữ liệu được nạp/ghi thông qua `Persistence/` và được điều phối bởi `BankService`.
+
 
