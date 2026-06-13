@@ -220,6 +220,9 @@ class AccountService:
         if account is None:
             raise ValueError(f"Account {account_id} does not exist")
         
+        if not new_pin:
+            raise ValueError("PIN is empty.")
+
         if not new_pin.isdigit():
             raise ValueError(
                 "PIN must contain only numbers."

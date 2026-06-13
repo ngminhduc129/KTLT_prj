@@ -169,7 +169,7 @@ class BankService:
         saving_account.maturity_date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         return account, interest
 
-    def close_saving_account(self, saving_id, password, pin):
+    def close_saving_account(self, saving_id, pin):
         saving_account = self.saving_service.find_saving_account(saving_id)
         interest = self.saving_service.calculate_interest(saving_id)
         total = saving_account.amount + interest

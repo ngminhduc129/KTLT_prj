@@ -68,16 +68,8 @@ class CloseSavingPage(QWidget):
         sep.setObjectName("formSep")
         f_layout.addRow(sep)
 
-        # ── HÀNG 3: MẬT KHẨU XÁC THỰC ────────────────────────────
-        # 🌟 ĐÃ KHÔI PHỤC: Mở lại ô nhập mật khẩu để đồng bộ logic hàm _on_close bên dưới
-        lbl_pwd = QLabel("Mật khẩu: *")
-        lbl_pwd.setObjectName("formLabel")
-        self.mw.cls_password = QLineEdit()
-        self.mw.cls_password.setEchoMode(QLineEdit.Password)
-        self.mw.cls_password.setPlaceholderText("Nhập mật khẩu tài khoản liên kết để xác nhận...")
-        f_layout.addRow(lbl_pwd, self.mw.cls_password)
 
-        # ── HÀNG 4: MÃ PIN GIAO DỊCH ────────────────────────────
+        # ── HÀNG 3: MÃ PIN GIAO DỊCH ────────────────────────────
         lbl_pin = QLabel("Mã PIN: *")
         lbl_pin.setObjectName("formLabel")
         self.mw.cls_pin = QLineEdit()
@@ -87,9 +79,9 @@ class CloseSavingPage(QWidget):
         f_layout.addRow(lbl_pin, self.mw.cls_pin)
 
         # Định dạng chiều cao và ObjectName cho các ô nhập bảo mật
-        for widget in [self.mw.cls_password, self.mw.cls_pin]:
-            widget.setObjectName("formInput")
-            widget.setFixedHeight(36)
+
+        self.mw.cls_pin.setObjectName("formInput")
+        self.mw.cls_pin.setFixedHeight(36)
 
         # Nạp toàn bộ khối Panel Form đã chuẩn hóa vào trang
         layout.addWidget(form_frame)
@@ -121,9 +113,7 @@ class CloseSavingPage(QWidget):
     def _clear(self):
         """Reset sạch các ô thông tin nhập liệu"""
         self.mw.cls_saving_id.clear()
-        self.mw.cls_password.clear()
         self.mw.cls_pin.clear()
-        # 🌟 ĐÃ FIX: QLabel sử dụng .setText để loại bỏ nguy cơ sập ứng dụng của hàm .clear() cũ
         self.mw.cls_info.setText("Chưa thực hiện kiểm tra")
 
     def _on_check(self):
@@ -150,16 +140,15 @@ class CloseSavingPage(QWidget):
     def _on_close(self):
         mw = self.mw
         saving_id = mw.cls_saving_id.text().strip()
-        password = mw.cls_password.text().strip()
         pin = mw.cls_pin.text().strip()
 
-        if not saving_id or not password or not pin:
+        if not saving_id or not pin:
             mw._show_error("Vui lòng điền đầy đủ thông tin giao dịch bắt buộc (*)!")
             return
 
         try:
             # Thực thi nghiệp vụ rút toàn bộ tiền gốc + lãi, đóng sổ vĩnh viễn trên backend bank_service
-            account, total = mw.bank.close_saving_account(saving_id, password, pin)
+            account, total = mw.bank.close_saving_account(saving_id, pin)
             account_id = account.account_id
             
             msg = (f"Hệ thống tất toán sổ tiết kiệm thành công!\n\n"

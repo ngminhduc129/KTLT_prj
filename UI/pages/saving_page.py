@@ -37,7 +37,7 @@ class SavingPage(QWidget):
         self.mw.sav_amount = QLineEdit()
         self.mw.sav_amount.setPlaceholderText("Nhập số tiền muốn gửi tiết kiệm (VND)...")
 
-        # 🌟 Chuẩn hóa chiều cao và ObjectName cho các ô nhập liệu
+        # Chuẩn hóa chiều cao và ObjectName cho các ô nhập liệu
         for widget in [self.mw.sav_account_id, self.mw.sav_amount]:
             widget.setObjectName("formInput")
             widget.setFixedHeight(36)
@@ -92,7 +92,6 @@ class SavingPage(QWidget):
     def _clear(self):
         self.mw.sav_account_id.clear()
         self.mw.sav_amount.clear()
-        # 🌟 ĐÃ FIX: QLabel không có thuộc tính .clear(), dùng .setText để loại bỏ nguy cơ sập ứng dụng
         self.mw.sav_result.setText("Chưa thực hiện giao dịch") 
 
     def _on_create(self):

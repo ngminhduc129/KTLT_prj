@@ -67,15 +67,7 @@ class InterestPage(QWidget):
         sep.setObjectName("formSep")
         f_layout.addRow(sep)
 
-        # ── HÀNG 3: MẬT KHẨU TÀI KHOẢN ──────────────────────────
-        lbl_pwd = QLabel("Mật khẩu: *")
-        lbl_pwd.setObjectName("formLabel")
-        self.mw.int_password = QLineEdit()
-        self.mw.int_password.setEchoMode(QLineEdit.Password)
-        self.mw.int_password.setPlaceholderText("Nhập mật khẩu tài khoản liên kết...")
-        f_layout.addRow(lbl_pwd, self.mw.int_password)
-
-        # ── HÀNG 4: MÃ PIN BẢO MẬT ────────────────────────────
+        # ── HÀNG 3: MÃ PIN BẢO MẬT ────────────────────────────
         lbl_pin = QLabel("Mã PIN: *")
         lbl_pin.setObjectName("formLabel")
         self.mw.int_pin = QLineEdit()
@@ -85,10 +77,8 @@ class InterestPage(QWidget):
         f_layout.addRow(lbl_pin, self.mw.int_pin)
 
         # Định dạng chiều cao và ObjectName cho các ô nhập bảo mật nhóm dưới
-        for widget in [self.mw.int_password, self.mw.int_pin]:
-            widget.setObjectName("formInput")
-            widget.setFixedHeight(36)
-
+        self.mw.int_pin.setObjectName("formInput")
+        self.mw.int_pin.setFixedHeight(36)
         # Nạp toàn bộ khối Panel Form vào giao diện chính
         layout.addWidget(form_frame)
 
@@ -119,7 +109,6 @@ class InterestPage(QWidget):
     def _clear(self):
         """Xóa sạch các trường dữ liệu và reset nhãn thông báo"""
         self.mw.int_saving_id.clear()
-        self.mw.int_password.clear()
         self.mw.int_pin.clear()
         self.mw.int_info.setText("Chưa thực hiện kiểm tra")
 
@@ -143,10 +132,9 @@ class InterestPage(QWidget):
     def _on_withdraw(self):
         mw = self.mw
         saving_id = mw.int_saving_id.text().strip()
-        password = mw.int_password.text().strip()
         pin = mw.int_pin.text().strip()
 
-        if not saving_id or not password or not pin:
+        if not saving_id or not pin:
             mw._show_error("Vui lòng điền đầy đủ thông tin giao dịch bắt buộc (*)!")
             return
 
